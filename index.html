@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Laporan SDM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f4f1ef;--card:#fff;--tx:#2a1a1e;--mu:#6b5b5f;--bd:#c9a0aa;--pr:#7a0f2a;--ok:#1f9d55;--no:#e67e22}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1315;--card:#2a1d20;--tx:#f5eceb;--mu:#bba9ad;--bd:#6d3a46;--pr:#d6455f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:18px/1.45 'Segoe UI',system-ui,sans-serif}
+.w{max-width:1500px;margin:auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:34px;margin:0;color:var(--pr)}.sub{color:var(--mu);font-size:17px}
+.up{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:12px 20px;font-size:17px;cursor:pointer}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:20px 0}
+.k{background:var(--card);border:1.5px solid var(--bd);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px}
+.ic{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:28px;color:#fff;flex:none}
+.k small{display:block;color:var(--mu);font-size:15px;font-weight:600;letter-spacing:.5px}.k b{font-size:34px;line-height:1.1}
+.sec{font-size:20px;font-weight:700;margin:22px 0 10px;color:var(--mu)}
+.tg{display:inline-flex;background:var(--card);border:2px solid var(--bd);border-radius:14px;overflow:hidden}
+.tg button{border:0;background:none;color:var(--tx);font-size:22px;font-weight:700;padding:14px 38px;cursor:pointer}
+.tg button.on{background:var(--pr);color:#fff}
+.ch{display:flex;flex-wrap:wrap;gap:10px}
+.ch button{background:var(--card);color:var(--tx);border:1.5px solid var(--bd);border-radius:12px;padding:12px 18px;font-size:18px;cursor:pointer;text-align:left}
+.ch button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.ch i{font-style:normal;opacity:.7;font-size:14px;margin-left:6px}
+.pn{background:var(--card);border:1.5px solid var(--bd);border-radius:16px;padding:20px;margin-top:14px}
+.pn h2{margin:0 0 14px;font-size:26px}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.h{border:1.5px solid var(--bd);border-radius:16px;padding:16px;display:flex;gap:14px;align-items:center;background:var(--card)}
+.h .ic{width:54px;height:54px}.h .l{font-size:17px;font-weight:600;color:var(--mu)}.h .n{font-size:36px;font-weight:800;line-height:1.1}
+.h .n s{font-size:17px;font-weight:600;text-decoration:none;color:var(--mu);margin-left:5px}.h .rp{font-size:16px;color:var(--pr);font-weight:700}
+.st{display:inline-block;padding:3px 12px;border-radius:99px;font-size:15px;font-weight:700;color:#fff}
+.Close{background:var(--ok)}.Open{background:var(--no)}.Kosong{background:#888}
+.bars .r{display:grid;grid-template-columns:minmax(150px,260px) 1fr 90px;gap:12px;align-items:center;margin:8px 0}
+.bars .t{height:26px;background:rgba(128,128,128,.18);border-radius:8px;overflow:hidden}.bars .f{height:100%;border-radius:8px}
+.bars .v{font-weight:800;text-align:right}
+.c3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.c3>div{border-left:6px solid var(--pr);background:rgba(128,128,128,.1);border-radius:10px;padding:14px}
+.c3 h3{margin:0 0 6px;font-size:17px;color:var(--mu)}.c3 li{margin:4px 0}.c3 ul{margin:0;padding-left:20px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:17px}
+th{background:var(--pr);color:#fff;text-align:left;padding:10px}td{padding:10px;border-bottom:1px solid var(--bd);vertical-align:top}
+.pr{height:16px;background:rgba(128,128,128,.2);border-radius:9px;overflow:hidden;margin-top:6px}.pr div{height:100%;background:var(--ok)}
+.em{padding:40px;text-align:center;color:var(--mu);font-size:20px}
+.hide{display:none!important}select{font-size:19px;padding:10px 14px;border-radius:10px;border:2px solid var(--bd);background:var(--card);color:var(--tx);max-width:100%}
+.bar{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin-top:16px}.bar label{font-weight:700;color:var(--mu);margin-right:8px}
+.dz{border:3px dashed var(--bd);border-radius:20px;padding:60px 20px;text-align:center;cursor:pointer;background:var(--card);margin-top:24px}.dz.on{background:rgba(122,15,42,.12)}.dz b{display:block;font-size:28px;color:var(--pr);margin:8px 0}
+</style></head><body><div class="w">
+<header><div><h1>DASHBOARD LAPORAN PELAKSANAAN PEKERJAAN SDM</h1><div class="sub" id="sub"></div></div>
+<div><input type="file" id="f" accept=".xlsx,.xlsm" hidden><button class="up" onclick="f.click()">⬆ Pilih file Excel</button></div></header>
+<div class="bar hide" id="bar"><div><label>Pilih Bulan (Sheet Laporan):</label><select id="ss"></select></div><div id="tkw" class="hide"><label>Sheet Tenaga Kerja:</label><select id="st"></select></div></div>
+<div class="dz" id="dz" onclick="f.click()"><div style="font-size:56px">📂</div><b>Seret file Excel ke sini, atau klik untuk memilih</b><div class="sub">File berisi sheet laporan tiap bulan dan sheet "Lap TK". Data dibaca di browser Anda dan tidak dikirim ke mana pun.</div></div>
+<div id="main" class="hide"><div class="kp" id="kp"></div>
+<div class="sec">1. Pilih Kategori</div><div class="tg" id="tg"></div>
+<div class="sec">2. Pilih Uraian Tugas</div><div class="ch" id="ch"></div>
+<div id="dt"></div></div></div>
+<script>
+let KPI={};
+const COL=['#7a0f2a','#1f9d55','#e6b800','#0aa2e8','#e0399b','#e67e22','#6c5ce7','#00a8a8'];
+const ICO=['👥','👷','🦺','📋','💰','🎯','📦','🏥'];
+const E=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const rp=n=>'Rp '+Math.round(n).toLocaleString('id-ID');const num=n=>Number(n).toLocaleString('id-ID');
+const cl=v=>{v=String(v??'').trim();return(v===''||v==='-')?'':v};
+let T=[],cat='Laporan',sel=null;
+function parse(R){const tasks=[];let cur=null,pre=[];
+ for(const r of R){const no=r[0],nm=cl(r[2]);
+  if(no!==''&&nm){cur={no,nama:nm,items:[],cats:{}};tasks.push(cur);if(pre.length){cur.items.push(...pre);pre=[]}}
+  let lab=cl(r[5]);const e=cl(r[4]);if(!lab&&e&&isNaN(e))lab='Total (Jumlah)';
+  const j=typeof r[7]==='number'?r[7]:null,nil=typeof r[11]==='number'?r[11]:null,sta=cl(r[17]);
+  if(!lab&&no!==''&&(sta||j!==null||nil!==null))lab='Keseluruhan';
+  if(!lab||(j===null&&nil===null&&!sta))continue;
+  const it={lab,j,sat:cl(r[8]),nil,ken:cl(r[15]),tl:cl(r[16]),sta:sta?(sta.toLowerCase()==='open'?'Open':'Close'):'',ket:cl(r[18]),kat:cl(r[19])};
+  if(cur){cur.items.push(it);if(it.kat)cur.cats[it.kat]=(cur.cats[it.kat]||0)+1}else pre.push(it)}
+ return tasks.filter(t=>t.items.length).map(t=>{t.kat=Object.entries(t.cats).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Laporan';return t})}
+function kpi(){const k=KPI,c=[];
+ if(k.pkwtt!=null)c.push(['TOTAL KARYAWAN',k.total,'#7a0f2a','👥'],['PKWTT',k.pkwtt,'#1f9d55','👷'],['PKWT',k.pkwt,'#e6b800','🦺'],['OUTSOURCING',k.os,'#0aa2e8','🏭'],['TASKFORCE + VARCOST',(k.tf||0)+(k.varcost||0),'#e0399b','🧰']);
+ if(k.ful!=null)c.push(['FULFILLMENT TENAGA KERJA',k.ful.toFixed(2).replace('.',',')+'%','#e67e22','🎯']);
+ document.getElementById('kp').innerHTML=c.map(x=>`<div class="k"><div class="ic" style="background:${x[2]}">${x[3]}</div><div><small>${x[0]}</small><b>${typeof x[1]==='number'?num(x[1]):x[1]}</b></div></div>`).join('')}
+function draw(){
+ document.getElementById('tg').innerHTML=['Laporan','Progres'].map(c=>`<button class="${c==cat?'on':''}" onclick="cat='${c}';sel=null;draw()">${c} (${T.filter(t=>t.kat==c).length})</button>`).join('');
+ const L=T.filter(t=>t.kat==cat);if(!L.find(t=>t.no==sel))sel=null;
+ document.getElementById('ch').innerHTML=L.map(t=>`<button class="${t.no==sel?'on':''}" onclick="sel='${t.no}';draw()">${t.no}. ${E(t.nama)}</button>`).join('');
+ const d=document.getElementById('dt'),t=L.find(t=>t.no==sel);
+ if(!t){d.innerHTML=`<div class="pn em">👆 Pilih salah satu uraian tugas untuk melihat detail hasil</div>`;return}
+ const it=t.items,cs=it.filter(i=>i.sta=='Close').length,op=it.filter(i=>i.sta=='Open').length,pct=cs+op?Math.round(cs/(cs+op)*100):0;
+ const nums=it.filter(i=>i.j!==null),mx=Math.max(1,...nums.map(i=>i.j));
+ const uniq=k=>{const m={};it.forEach(i=>{if(i[k]){(m[i[k]]=m[i[k]]||[]).push(i.lab)}});return m};
+ const bl=(k,t2)=>{const m=uniq(k),e=Object.entries(m);return`<div><h3>${t2}</h3>${e.length?'<ul>'+e.map(([v,l])=>`<li>${E(v)}${l.length<it.length&&l.length<4?` <small style="color:var(--mu)">(${E(l.join(', '))})</small>`:''}</li>`).join('')+'</ul>':'<span style="color:var(--mu)">Tidak ada</span>'}</div>`};
+ d.innerHTML=`<div class="pn"><h2>${t.no}. ${E(t.nama)} <span class="st ${op?'Open':'Close'}">${op?'ADA YANG OPEN':'SEMUA CLOSE'}</span></h2>
+ <div class="kp" style="margin-top:0"><div class="k"><div><small>JUMLAH BARIS DATA</small><b>${it.length}</b></div></div><div class="k"><div><small>CLOSE</small><b style="color:var(--ok)">${cs}</b></div></div><div class="k"><div><small>OPEN</small><b style="color:var(--no)">${op}</b></div></div><div class="k"><div style="width:100%"><small>% PENYELESAIAN</small><b>${pct}%</b><div class="pr"><div style="width:${pct}%"></div></div></div></div></div>
+ <div class="sec">Hasil (Jumlah)</div><div class="g">${it.map((i,x)=>`<div class="h"><div class="ic" style="background:${COL[x%8]}">${ICO[x%8]}</div><div><div class="l">${E(i.lab)}</div><div class="n">${i.j!==null?num(i.j):(i.nil!==null?'—':'-')}<s>${E(i.sat)}</s></div>${i.nil!==null?`<div class="rp">${rp(i.nil)}</div>`:''}${i.sta?`<span class="st ${i.sta}">${i.sta.toUpperCase()}</span>`:''}</div></div>`).join('')}</div>
+ ${nums.length>1?`<div class="sec">Grafik Perbandingan Jumlah</div><div class="bars">${nums.map((i,x)=>`<div class="r"><div>${E(i.lab)}</div><div class="t"><div class="f" style="width:${i.j/mx*100}%;background:${COL[it.indexOf(i)%8]}"></div></div><div class="v">${num(i.j)}</div></div>`).join('')}</div>`:''}
+ <div class="sec">Kendala · Tindak Lanjut · Keterangan</div><div class="c3">${bl('ken','KENDALA YANG DIHADAPI')}${bl('tl','TINDAK LANJUT')}${bl('ket','KETERANGAN')}</div>
+ <div class="sec">Detail Data</div><div class="tw"><table><tr><th>No</th><th>Uraian</th><th>Jumlah</th><th>Nilai (Rp)</th><th>Kendala</th><th>Tindak Lanjut</th><th>Status</th><th>Keterangan</th></tr>${it.map((i,x)=>`<tr><td>${x+1}</td><td><b>${E(i.lab)}</b></td><td>${i.j!==null?num(i.j)+' '+E(i.sat):'-'}</td><td>${i.nil!==null?rp(i.nil):'-'}</td><td>${E(i.ken)||'-'}</td><td>${E(i.tl)||'-'}</td><td>${i.sta?`<span class="st ${i.sta}">${i.sta}</span>`:'-'}</td><td>${E(i.ket)||'-'}</td></tr>`).join('')}</table></div></div>`}
+function init(R,title){T=parse(R);document.getElementById('sub').textContent=title||'Sumber: sheet 13-10';kpi();draw()}
+let WB=null,FN='';const $=i=>document.getElementById(i);
+const isTK=n=>/lap\s*tk/i.test(n),a1=n=>String(WB.Sheets[n]['A1']?.v||'');
+const nn=v=>typeof v==='number'?v:0;
+function readKPI(name){const K={};if(!name)return K;
+ for(const r of XLSX.utils.sheet_to_json(WB.Sheets[name],{header:1,defval:''})){
+  const t=r.slice(0,4).findIndex(c=>String(c).trim().toUpperCase()==='TOTAL');
+  if(t>=0&&K.pkwt==null){K.kontrak=nn(r[t+2]);K.pkwt=nn(r[t+3]);K.pkwtt=nn(r[t+4]);K.os=nn(r[t+5]);K.tf=nn(r[t+6]);K.varcost=nn(r[t+7]);K.total=K.pkwt+K.pkwtt}
+  const f=r.findIndex(c=>/fulfil/i.test(String(c)));
+  if(f>=0&&K.ful==null){const v=r.slice(f+1).find(x=>typeof x==='number');if(v!=null)K.ful=v}}
+ return K}
+function load(){const sn=$('ss').value;
+ const a=XLSX.utils.sheet_to_json(WB.Sheets[sn],{header:1,defval:'',range:4});
+ KPI=readKPI($('st').value||WB.SheetNames.find(isTK)||'');
+ cat='Laporan';sel=null;
+ init(a.map(r=>Array.from({length:20},(_,i)=>r[i]??'')),'Sumber: '+FN+' — sheet "'+sn+'" · '+a1(sn))}
+function fill(s,arr,idx){s.innerHTML='';arr.forEach(n=>{const o=document.createElement('option');o.value=o.textContent=n;s.appendChild(o)});s.selectedIndex=idx}
+async function onfile(fl){if(!fl)return;
+ try{WB=XLSX.read(await fl.arrayBuffer(),{type:'array'});FN=fl.name;
+  let ls=WB.SheetNames.filter(n=>!isTK(n)&&/laporan/i.test(a1(n)));
+  if(!ls.length)ls=WB.SheetNames.filter(n=>!isTK(n)&&/^\s*\d{1,2}[-.\/]\d{1,2}/.test(n));
+  if(!ls.length){alert('Sheet laporan tidak ditemukan. Sheet di file ini: '+WB.SheetNames.join(', '));return}
+  const tk=WB.SheetNames.filter(isTK);
+  fill($('ss'),ls,ls.length-1);fill($('st'),tk,Math.min(ls.length-1,Math.max(tk.length-1,0)));
+  $('tkw').classList.toggle('hide',tk.length<2);$('bar').classList.remove('hide');$('dz').classList.add('hide');$('main').classList.remove('hide');
+  load()}catch(x){alert('Gagal membaca file: '+x.message)}}
+$('f').onchange=e=>{onfile(e.target.files[0]);e.target.value=''};
+$('ss').onchange=()=>{const tk=WB.SheetNames.filter(isTK);if(tk.length>1)$('st').selectedIndex=Math.min($('ss').selectedIndex,tk.length-1);load()};
+$('st').onchange=load;
+const dz=$('dz');['dragover','dragenter'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.add('on')}));
+['dragleave','drop'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.remove('on')}));
+dz.addEventListener('drop',e=>onfile(e.dataTransfer.files[0]));
+</script></body></html>
