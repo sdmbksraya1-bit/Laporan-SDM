@@ -70,7 +70,7 @@ function parse(R){const tasks=[];let cur=null,pre=[];
   if(cur){cur.items.push(it);if(it.kat)cur.cats[it.kat]=(cur.cats[it.kat]||0)+1}else pre.push(it)}
  return tasks.filter(t=>t.items.length).map(t=>{t.kat=Object.entries(t.cats).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Laporan';return t})}
 function kpi(){const k=KPI,c=[];
- if(k.pkwtt!=null)c.push(['TOTAL KARYAWAN',k.total,'#7a0f2a','👥'],['PKWTT',k.pkwtt,'#1f9d55','👷'],['PKWT',k.pkwt,'#e6b800','🦺'],['OUTSOURCING',k.os,'#0aa2e8','🏭'],['TASKFORCE + VARCOST',(k.tf||0)+(k.varcost||0),'#e0399b','🧰']);
+ if(k.pkwtt!=null)c.push(['TOTAL TENAGA KERJA',k.total,'#7a0f2a','👥'],['PKWTT',k.pkwtt,'#1f9d55','👷'],['PKWT',k.pkwt,'#e6b800','🦺'],['OUTSOURCING',k.os,'#0aa2e8','🏭'],['TASKFORCE + VARCOST',(k.tf||0)+(k.varcost||0),'#e0399b','🧰']);
  if(k.ful!=null)c.push(['FULFILLMENT TENAGA KERJA',k.ful.toFixed(2).replace('.',',')+'%','#e67e22','🎯']);
  document.getElementById('kp').innerHTML=c.map(x=>`<div class="k"><div class="ic" style="background:${x[2]}">${x[3]}</div><div><small>${x[0]}</small><b>${typeof x[1]==='number'?num(x[1]):x[1]}</b></div></div>`).join('')}
 function draw(){
@@ -96,7 +96,7 @@ const nn=v=>typeof v==='number'?v:0;
 function readKPI(name){const K={};if(!name)return K;
  for(const r of XLSX.utils.sheet_to_json(WB.Sheets[name],{header:1,defval:''})){
   const t=r.slice(0,4).findIndex(c=>String(c).trim().toUpperCase()==='TOTAL');
-  if(t>=0&&K.pkwt==null){K.kontrak=nn(r[t+2]);K.pkwt=nn(r[t+3]);K.pkwtt=nn(r[t+4]);K.os=nn(r[t+5]);K.tf=nn(r[t+6]);K.varcost=nn(r[t+7]);K.total=K.pkwt+K.pkwtt}
+  if(t>=0&&K.pkwt==null){K.kontrak=nn(r[t+2]);K.pkwt=nn(r[t+3]);K.pkwtt=nn(r[t+4]);K.os=nn(r[t+5]);K.tf=nn(r[t+6]);K.varcost=nn(r[t+7]);K.total=K.pkwt+K.pkwtt+K.os+K.tf+K.varcost}
   const f=r.findIndex(c=>/fulfil/i.test(String(c)));
   if(f>=0&&K.ful==null){const v=r.slice(f+1).find(x=>typeof x==='number');if(v!=null)K.ful=v}}
  return K}
