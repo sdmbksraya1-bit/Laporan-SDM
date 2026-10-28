@@ -54,7 +54,7 @@ th{background:var(--pr);color:#fff;text-align:left;padding:10px}td{padding:10px;
 <div id="dt"></div></div></div>
 <script>
 let KPI={};
-const COL=['#e6ecf5','#1f9d55','#e6b800','#0aa2e8','#f6738f','#e67e22','#6c5ce7','#00a8a8'];
+const COL=['#E11A45','#1f9d55','#e6b800','#0aa2e8','#f6738f','#e67e22','#6c5ce7','#00a8a8'];
 const ICO=['👥','👷','🦺','📋','💰','🎯','📦','🏥'];
 const E=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const rp=n=>'Rp '+Math.round(n).toLocaleString('id-ID');const num=n=>Number(n).toLocaleString('id-ID');
@@ -71,7 +71,7 @@ function parse(R){const tasks=[];let cur=null,pre=[];
   if(cur){cur.items.push(it);if(it.kat)cur.cats[it.kat]=(cur.cats[it.kat]||0)+1}else pre.push(it)}
  return tasks.filter(t=>t.items.length).map(t=>{t.kat=Object.entries(t.cats).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Laporan';return t})}
 function kpi(){const k=KPI,c=[];
- if(k.pkwtt!=null)c.push(['TOTAL TENAGA KERJA',k.total,'#e6ecf5','👥'],['PKWTT',k.pkwtt,'#1f9d55','👷'],['PKWT',k.pkwt,'#e6b800','🦺'],['OUTSOURCING',k.os,'#0aa2e8','🏭'],['TASKFORCE + VARCOST',(k.tf||0)+(k.varcost||0),'#a78bfa','🧰']);
+ if(k.pkwtt!=null)c.push(['TOTAL TENAGA KERJA',k.total,'#E11A45','👥'],['PKWTT',k.pkwtt,'#1f9d55','👷'],['PKWT',k.pkwt,'#e6b800','🦺'],['OUTSOURCING',k.os,'#0aa2e8','🏭'],['TASKFORCE + VARCOST',(k.tf||0)+(k.varcost||0),'#a78bfa','🧰']);
  if(k.ful!=null)c.push(['FULFILLMENT TENAGA KERJA',k.ful.toFixed(2).replace('.',',')+'%','#e67e22','🎯']);
  document.getElementById('kp').innerHTML=c.map(x=>`<div class="k"><div class="ic" style="background:${x[2]}">${x[3]}</div><div><small>${x[0]}</small><b>${typeof x[1]==='number'?num(x[1]):x[1]}</b></div></div>`).join('')}
 function draw(){
